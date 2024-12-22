@@ -24,6 +24,7 @@ async function run() {
   try {
 
     const itemCollection = client.db('WhereIsIt').collection('lost_found_items')
+    const recoveredItemCollection = client.db('WhereIsIt').collection('recovered_items')
 
     app.post('/items', async(req, res) => {
       const newItem = req.body;
@@ -41,6 +42,15 @@ async function run() {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
       const result = await itemCollection.findOne(query)
+      res.send(result)
+    })
+
+
+    // recovered items APIs
+
+    app.post('/recoverd-items', async(req,res) => {
+      const newRecoveredItem = req.body;
+      const result = await recoveredItemCollection.insertOne(newRecoveredItem)
       res.send(result)
     })
 
