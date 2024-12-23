@@ -45,6 +45,28 @@ async function run() {
       res.send(result)
     })
 
+    app.patch('/items/:id', async(req, res) => {
+      const id = req.params.id;
+      const itemsData = req.body
+      const filter = {_id: new ObjectId(id)}
+      const updatedItem = {
+        $set: {
+          postType : itemsData.postType,
+          thumbnail : itemsData.thumbnail,
+          title : itemsData.title ,
+          description : itemsData.description ,
+          category : itemsData.category ,
+          location : itemsData.location ,
+          dateLost : itemsData.dateLost ,
+          contactName : itemsData.contactName ,
+          contactEmail : itemsData.contactEmail ,
+          status : itemsData.status ,
+        }
+      }
+      const result = await itemCollection.updateOne(filter, updatedItem);
+      res.send(result)
+    })
+
     app.get('/myItems', async(req, res) => {
       const email = req.query.email;
       const filter = { contactEmail: email}
