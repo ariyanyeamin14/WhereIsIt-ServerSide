@@ -102,6 +102,13 @@ async function run() {
       res.send(resultUpdate)
     })
 
+    app.get('/recoveredItems', async(req, res) => {
+      const email = req.query.email;
+      const filter = { contactEmail: email}
+      const result = await recoveredItemCollection.find(filter).toArray();
+      res.send(result)
+    })
+
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
