@@ -48,10 +48,22 @@ async function run() {
 
     // recovered items APIs
 
-    app.post('/recoverd-items', async(req,res) => {
+    app.post('/items/:id', async(req,res) => {
+
+      // create new data on new collection
       const newRecoveredItem = req.body;
-      const result = await recoveredItemCollection.insertOne(newRecoveredItem)
-      res.send(result)
+      const resultPost = await recoveredItemCollection.insertOne(newRecoveredItem)
+
+      // update existing data on other collection
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const updatedDoc = {
+        $set: {
+          status: "recovered"
+        }
+      }
+      const resultUpdate = await itemCollection.updateOne(query, updatedDoc);
+      res.send(resultUpdate)
     })
 
     // Connect the client to the server	(optional starting in v4.7)
