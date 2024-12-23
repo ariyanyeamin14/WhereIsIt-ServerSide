@@ -40,8 +40,22 @@ async function run() {
 
     app.get('/items/:id', async(req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
-      const result = await itemCollection.findOne(query)
+      const filter = {_id: new ObjectId(id)}
+      const result = await itemCollection.findOne(filter)
+      res.send(result)
+    })
+
+    app.get('/myItems', async(req, res) => {
+      const email = req.query.email;
+      const filter = { contactEmail: email}
+      const result = await itemCollection.find(filter).toArray();
+      res.send(result)
+    })
+
+    app.delete('/myItems/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await itemCollection.deleteOne(query);
       res.send(result)
     })
 
@@ -56,13 +70,13 @@ async function run() {
 
       // update existing data on other collection
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const filter = {_id: new ObjectId(id)}
       const updatedDoc = {
         $set: {
           status: "recovered"
         }
       }
-      const resultUpdate = await itemCollection.updateOne(query, updatedDoc);
+      const resultUpdate = await itemCollection.updateOne(filter, updatedDoc);
       res.send(resultUpdate)
     })
 
