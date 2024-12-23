@@ -38,6 +38,12 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/recentItems', async(req, res) => {
+      const cursor = itemCollection.find({})
+      const result = await cursor.sort({ dateLost: -1}).limit(6).toArray()
+      res.send(result)
+    })
+
     app.get('/items/:id', async(req, res) => {
       const id = req.params.id;
       const filter = {_id: new ObjectId(id)}
